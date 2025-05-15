@@ -1,0 +1,52 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "train",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/train.py",
+            "console": "integratedTerminal",
+            "args": [
+                "configs/recognition/slowfast/slowfast_r50_uav_bird.py",
+                "--work-dir", "output",
+            ]
+        },
+        {
+            "name": "test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/test.py",
+            "console": "integratedTerminal",
+            "args": [
+                "configs/recognition/slowfast/slowfast_r50_uav_bird.py",
+                "output/best_acc_top1_epoch_205.pth",
+                // "--show-dir", "output"
+            ],
+            "env": {
+                "DISPLAY": "localhost:10.0",
+            },
+        },
+        {
+            "name": "demo",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "demo/demo.py",
+            "console": "integratedTerminal",
+            "args": [
+                "configs/recognition/slowfast/slowfast_r50_uav_bird.py",
+                "output/best_acc_top1_epoch_205.pth",
+                "/home/tl/data/video/110/bird-3.20-26-target.mp4",
+                "/home/tl/data/datasets/mmaction2/track_targets/track_targets_label_map.txt"
+            ],
+            "env": {
+                "DISPLAY": "localhost:10.0",
+            },
+            "justMyCode": false
+        }
+    ]
+}
