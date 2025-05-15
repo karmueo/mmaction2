@@ -12,8 +12,8 @@
             "program": "tools/train.py",
             "console": "integratedTerminal",
             "args": [
-                "configs/recognition/slowfast/slowfast_r50_uav_bird.py",
-                "--work-dir", "output",
+                "configs/recognition/tsn/tsn_imagenet-pretrained-r50_bird_uav.py",
+                "--work-dir", "./output/ts",
             ]
         },
         {
