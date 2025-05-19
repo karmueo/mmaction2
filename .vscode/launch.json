@@ -12,8 +12,9 @@
             "program": "tools/train.py",
             "console": "integratedTerminal",
             "args": [
-                "configs/recognition/tsn/tsn_imagenet-pretrained-r50_bird_uav.py",
-                "--work-dir", "./output/ts",
+                "configs/recognition/slowfast/slowfast_r50_uav_bird.py",
+                "--work-dir", "./output/slowfast",
+                "--amp"
             ]
         },
         {
@@ -38,10 +39,10 @@
             "program": "demo/demo.py",
             "console": "integratedTerminal",
             "args": [
-                "configs/recognition/slowfast/slowfast_r50_uav_bird.py",
-                "output/best_acc_top1_epoch_205.pth",
-                "/home/tl/data/video/110/bird-3.20-26-target.mp4",
-                "/home/tl/data/datasets/mmaction2/track_targets/track_targets_label_map.txt"
+                "output/slowfast_r50_uav_bird.py",
+                "output/best_acc_top1_epoch_110.pth",
+                "/mnt/data_80/data/samba_share/Infrared/110/drone+bird_3.20/videos/drone/drone-3.20-1.mp4",
+                "output/track_targets_label_map.txt"
             ],
             "env": {
                 "DISPLAY": "localhost:10.0",

@@ -12,7 +12,7 @@ ann_file_test = '/home/tl/data/datasets/mmaction2/track_targets/track_targets_va
 file_client_args = dict(io_backend='disk')
 train_pipeline = [
     dict(type='DecordInit', **file_client_args),
-    dict(type='SampleFrames', clip_len=32, frame_interval=2, num_clips=1),
+    dict(type='SampleFrames', clip_len=64, frame_interval=1, num_clips=1),
     dict(type='DecordDecode'),
     dict(type='Resize', scale=(224, 224), keep_ratio=True),
     dict(type='Flip', flip_ratio=0.5),
@@ -23,8 +23,8 @@ val_pipeline = [
     dict(type='DecordInit', **file_client_args),
     dict(
         type='SampleFrames',
-        clip_len=32,
-        frame_interval=2,
+        clip_len=64,
+        frame_interval=1,
         num_clips=1,
         test_mode=True),
     dict(type='DecordDecode'),
@@ -36,8 +36,8 @@ test_pipeline = [
     dict(type='DecordInit', **file_client_args),
     dict(
         type='SampleFrames',
-        clip_len=32,
-        frame_interval=2,
+        clip_len=64,
+        frame_interval=1,
         num_clips=1,
         test_mode=True),
     dict(type='DecordDecode'),
@@ -46,7 +46,7 @@ test_pipeline = [
     dict(type='PackActionInputs')
 ]
 train_dataloader = dict(
-    batch_size=32,
+    batch_size=16,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
@@ -56,7 +56,7 @@ train_dataloader = dict(
         data_prefix=dict(video=data_root),
         pipeline=train_pipeline))
 val_dataloader = dict(
-    batch_size=24,
+    batch_size=16,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -82,7 +82,7 @@ val_evaluator = dict(type='AccMetric')
 test_evaluator = val_evaluator
 
 train_cfg = dict(
-    type='EpochBasedTrainLoop', max_epochs=300, val_begin=1, val_interval=5)
+    type='EpochBasedTrainLoop', max_epochs=225, val_begin=1, val_interval=5)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
@@ -92,19 +92,12 @@ optim_wrapper = dict(
 
 param_scheduler = [
     dict(
-        type='LinearLR',
-        start_factor=0.1,
-        by_epoch=True,
+        type='MultiStepLR',
         begin=0,
-        end=34,
-        convert_to_iter_based=True),
-    dict(
-        type='CosineAnnealingLR',
-        T_max=256,
-        eta_min=0,
+        end=200,
         by_epoch=True,
-        begin=0,
-        end=256)
+        milestones=[50, 100],
+        gamma=0.1)
 ]
 
 default_hooks = dict(
