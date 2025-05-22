@@ -21,8 +21,8 @@
 			"program": "tools/test.py",
 			"console": "integratedTerminal",
 			"args": [
-				"output/tsm/tsm_imagenet-bird_uav.py",
-				"output/tsm/epoch_219.pth"
+				"configs/recognition/tsm/tsm_imagenet-bird_uav_images.py",
+				"output/tsm/epoch_225.pth"
 				// "--show-dir", "output"
 			],
 			"justMyCode": false

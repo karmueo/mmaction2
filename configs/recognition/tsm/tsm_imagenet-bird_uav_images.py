@@ -8,8 +8,10 @@ model = dict(backbone=dict(num_segments=32), cls_head=dict(num_segments=32))
 dataset_type = 'RawframeDataset'
 data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train'
 data_root_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val'
+data_root_test = '/home/tl/data/datasets/video/video_recognition_data_2'
 ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train/110_video_train_annotation_file.txt'
 ann_file_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val/110_video_val_annotation_file.txt'
+ann_file_test = '/home/tl/data/datasets/video/video_recognition_data_2/rawframes_annotations.txt'
 filename_tmpl = '{:d}.jpg'
 
 file_client_args = dict(io_backend='disk')
@@ -38,8 +40,8 @@ val_pipeline = [
 test_pipeline = [
     dict(
         type='SampleFrames',
-        clip_len=1,
-        frame_interval=5,
+        clip_len=3,
+        frame_interval=1,
         num_clips=32,
         test_mode=True),
     dict(type='RawFrameDecode'),
@@ -79,8 +81,9 @@ test_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
-        ann_file=ann_file_val,
-        data_prefix=dict(img=data_root_val),
+        start_index=0,
+        ann_file=ann_file_test,
+        data_prefix=dict(img=data_root_test),
         filename_tmpl=filename_tmpl,
         pipeline=test_pipeline,
         test_mode=True))
