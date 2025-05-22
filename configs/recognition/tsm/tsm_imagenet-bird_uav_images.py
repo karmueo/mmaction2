@@ -1,72 +1,77 @@
 _base_ = ['../../_base_/models/tsm_r50.py', '../../_base_/default_runtime.py']
 
-# dataset settings
-dataset_type = 'VideoDataset'
-data_root = '/home/tl/data/datasets/mmaction2/track_targets'
-data_root_val = '/home/tl/data/datasets/mmaction2/track_targets'
-ann_file_train = '/home/tl/data/datasets/mmaction2/track_targets/track_targets_train_list_videos.txt'
-ann_file_val = '/home/tl/data/datasets/mmaction2/track_targets/track_targets_val_list_videos.txt'
 
+# model settings
+model = dict(backbone=dict(num_segments=32), cls_head=dict(num_segments=32))
+
+# dataset settings
+dataset_type = 'RawframeDataset'
+data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train'
+data_root_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val'
+ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train/110_video_train_annotation_file.txt'
+ann_file_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val/110_video_val_annotation_file.txt'
+filename_tmpl = '{:d}.jpg'
 
 file_client_args = dict(io_backend='disk')
-
 train_pipeline = [
-    dict(type='DecordInit', **file_client_args),
-    dict(type='SampleFrames', clip_len=1, frame_interval=1, num_clips=8),
-    dict(type='DecordDecode'),
+    dict(type='SampleFrames', clip_len=1, frame_interval=5, num_clips=32),
+    dict(type='RawFrameDecode', **file_client_args),
     dict(type='Resize', scale=(224, 224), keep_ratio=True),
     dict(type='Flip', flip_ratio=0.5),
     dict(type='FormatShape', input_format='NCHW'),
     dict(type='PackActionInputs')
 ]
+
 val_pipeline = [
-    dict(type='DecordInit', **file_client_args),
     dict(
         type='SampleFrames',
         clip_len=1,
-        frame_interval=1,
-        num_clips=8,
+        frame_interval=5,
+        num_clips=32,
         test_mode=True),
-    dict(type='DecordDecode'),
-    dict(type='Resize', scale=(224, 224), keep_ratio=True),
-    dict(type='FormatShape', input_format='NCHW'),
-    dict(type='PackActionInputs')
-]
-test_pipeline = [
-    dict(type='DecordInit', **file_client_args),
-    dict(
-        type='SampleFrames',
-        clip_len=1,
-        frame_interval=1,
-        num_clips=8,
-        test_mode=True),
-    dict(type='DecordDecode'),
+    dict(type='RawFrameDecode'),
     dict(type='Resize', scale=(224, 224), keep_ratio=True),
     dict(type='FormatShape', input_format='NCHW'),
     dict(type='PackActionInputs')
 ]
 
+test_pipeline = [
+    dict(
+        type='SampleFrames',
+        clip_len=1,
+        frame_interval=5,
+        num_clips=32,
+        test_mode=True),
+    dict(type='RawFrameDecode'),
+    dict(type='FormatShape', input_format='NCHW'),
+    dict(type='PackActionInputs')
+]
+
 train_dataloader = dict(
-    batch_size=16,
+    batch_size=8,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_train,
-        data_prefix=dict(video=data_root),
+        data_prefix=dict(img=data_root_train),
+        filename_tmpl=filename_tmpl,
         pipeline=train_pipeline))
+
 val_dataloader = dict(
-    batch_size=16,
+    batch_size=8,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_val,
-        data_prefix=dict(video=data_root_val),
+        data_prefix=dict(img=data_root_val),
+        filename_tmpl=filename_tmpl,
         pipeline=val_pipeline,
         test_mode=True))
+
 test_dataloader = dict(
     batch_size=1,
     num_workers=8,
@@ -75,7 +80,8 @@ test_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_val,
-        data_prefix=dict(video=data_root_val),
+        data_prefix=dict(img=data_root_val),
+        filename_tmpl=filename_tmpl,
         pipeline=test_pipeline,
         test_mode=True))
 
