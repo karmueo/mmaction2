@@ -12,7 +12,8 @@
 			"request": "launch",
 			"program": "tools/train.py",
 			"console": "integratedTerminal",
-			"args": ["configs/recognition/tsm/tsm_imagenet-bird_uav_images.py", "--work-dir", "./output/tsm", "--amp"]
+			"args": ["configs/recognition/mvit/mvit-base-p244_32x3x1_bird_uav.py", "--work-dir", "./output/mvit", "--amp"],
+			"justMyCode": false
 		},
 		{
 			"name": "test",
@@ -21,9 +22,8 @@
 			"program": "tools/test.py",
 			"console": "integratedTerminal",
 			"args": [
-				"configs/recognition/tsm/tsm_imagenet-bird_uav_images.py",
-				"output/tsm/epoch_225.pth"
-				// "--show-dir", "output"
+				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
+				"output/uniformerv2/best_acc_top1_epoch_7.pth"
 			],
 			"justMyCode": false
 		},
@@ -34,15 +34,33 @@
 			"program": "demo/demo.py",
 			"console": "integratedTerminal",
 			"args": [
-				"output/tsm/tsm_imagenet-bird_uav.py",
-				"output/tsm/epoch_219.pth",
-				"/home/tl/data/datasets/video/vidoe_recognition_data/7.mp4",
+				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
+				"output/uniformerv2/epoch_225.pth",
+				"/home/tl/data/datasets/mmaction2/110_video_frames/test/0/",
 				"output/track_targets_label_map.txt"
 			],
 			// "env": {
 			// 	"DISPLAY": "localhost:10.0"
 			// },
 			// "justMyCode": false
+		},
+		{
+			"name": "demo_inferencer",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "demo/demo_inferencer.py",
+			"console": "integratedTerminal",
+			"args": [
+				"/home/tl/data/datasets/mmaction2/110_video_frames/test/0/",
+				"--vid-out-dir", "output/uniformerv2/test",
+				"--rec", "configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
+				"--rec-weights", "output/uniformerv2/epoch_225.pth",
+				"--label-file", "output/track_targets_label_map.txt"
+			],
+			// "env": {
+			// 	"DISPLAY": "localhost:10.0"
+			// },
+			"justMyCode": false
 		},
         {
 			"name": "export",

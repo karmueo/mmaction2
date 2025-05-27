@@ -49,10 +49,20 @@ def parse_args():
         type=str,
         default='',
         help='File to save the inference results.')
+    parser.add_argument(
+        '--input-format',
+        type=str,
+        default='rawframes',
+        help='input-format.')
+    parser.add_argument(
+        '--out_type',
+        type=str,
+        default='img',
+        help='out_type.')
 
     call_args = vars(parser.parse_args())
 
-    init_kws = ['rec', 'rec_weights', 'device', 'label_file']
+    init_kws = ['rec', 'rec_weights', 'device', 'label_file', 'input_format']
     init_args = {}
     for init_kw in init_kws:
         init_args[init_kw] = call_args.pop(init_kw)

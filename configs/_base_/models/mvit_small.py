@@ -9,6 +9,6 @@ model = dict(
     cls_head=dict(
         type='MViTHead',
         in_channels=768,
-        num_classes=400,
+        num_classes=2,
         label_smooth_eps=0.1,
         average_clips='prob'))

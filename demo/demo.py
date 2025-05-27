@@ -49,6 +49,16 @@ def parse_args():
         'video as input. If either dimension is set to -1, the frames are '
         'resized by keeping the existing aspect ratio')
     parser.add_argument('--out-filename', default=None, help='output filename')
+    parser.add_argument(
+        '--input-format',
+        type=str,
+        default='rawframes',
+        help='input-format.')
+    parser.add_argument(
+        '--out_type',
+        type=str,
+        default='img',
+        help='out_type.')
     args = parser.parse_args()
     return args
 
