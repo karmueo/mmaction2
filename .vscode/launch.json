@@ -12,7 +12,14 @@
 			"request": "launch",
 			"program": "tools/train.py",
 			"console": "integratedTerminal",
-			"args": ["configs/recognition/mvit/mvit-base-p244_32x3x1_bird_uav.py", "--work-dir", "./output/mvit", "--amp"],
+			"args": [
+				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav_finetune.py", 
+				"--work-dir", "./output/uniformerv2", 
+				// "configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
+				// "--work-dir", "./output/uniformerv2",	
+				// "configs/recognition/tsm/tsm_imagenet-bird_uav_images_finetune.py", 
+				// "--work-dir", "./output/tsm", 
+				"--amp"],
 			"justMyCode": false
 		},
 		{
@@ -22,8 +29,10 @@
 			"program": "tools/test.py",
 			"console": "integratedTerminal",
 			"args": [
-				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
-				"output/uniformerv2/best_acc_top1_epoch_7.pth"
+				// "configs/recognition/tsm/tsm_imagenet-bird_uav_images.py",
+				// "output/tsm/epoch_225.pth"
+				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav_finetune.py",
+				"output/uniformerv2/epoch_50.pth"
 			],
 			"justMyCode": false
 		},

@@ -39,12 +39,12 @@ model = dict(
 
 # dataset settings
 dataset_type = 'RawframeDataset'
-data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train'
+data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames_60/train_all'
 data_root_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val'
-data_root_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test'
-ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train/110_video_train_annotation_file.txt'
+data_root_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/test_data'
+ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames_60/train_all/110_video_train_annotation_file.txt'
 ann_file_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val/110_video_val_annotation_file.txt'
-ann_file_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/110_video_test_annotation_file.txt'
+ann_file_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/test_data/110_video_test_annotation_file.txt'
 filename_tmpl = '{:d}.jpg'
 
 file_client_args = dict(io_backend='disk')
@@ -73,6 +73,7 @@ test_pipeline = [
         type='UniformSample', clip_len=num_frames, num_clips=4,
         test_mode=True),
     dict(type='RawFrameDecode'),
+    dict(type='Resize', scale=(224, 224), keep_ratio=True),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='PackActionInputs')
 ]
@@ -122,7 +123,7 @@ test_dataloader = dict(
 val_evaluator = dict(type='AccMetric')
 test_evaluator = dict(type='AccMetric')
 train_cfg = dict(
-    type='EpochBasedTrainLoop', max_epochs=225, val_begin=1, val_interval=1)
+    type='EpochBasedTrainLoop', max_epochs=200, val_begin=1, val_interval=1)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 

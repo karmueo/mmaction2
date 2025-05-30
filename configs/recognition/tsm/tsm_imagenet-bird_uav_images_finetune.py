@@ -1,6 +1,8 @@
 _base_ = ['../../_base_/models/tsm_r50.py', '../../_base_/default_runtime.py']
 
 
+load_from = '/home/tl/work/mmaction2/output/tsm/best_epoch_225.pth'
+
 # model settings
 model = dict(backbone=dict(num_segments=32), cls_head=dict(num_segments=32))
 
@@ -57,6 +59,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         ann_file=ann_file_train,
+        start_index=0,
         data_prefix=dict(img=data_root_train),
         filename_tmpl=filename_tmpl,
         pipeline=train_pipeline))
@@ -68,6 +71,7 @@ val_dataloader = dict(
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
+        start_index=0,
         ann_file=ann_file_test,
         data_prefix=dict(img=data_root_test),
         filename_tmpl=filename_tmpl,
@@ -94,26 +98,27 @@ test_evaluator = val_evaluator
 default_hooks = dict(checkpoint=dict(interval=3, max_keep_ckpts=3))
 
 train_cfg = dict(
-    type='EpochBasedTrainLoop', max_epochs=225, val_begin=1, val_interval=5)
+    type='EpochBasedTrainLoop', max_epochs=50, val_begin=1, val_interval=1)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
 param_scheduler = [
-    dict(type='LinearLR', start_factor=0.1, by_epoch=True, begin=0, end=10),
     dict(
         type='MultiStepLR',
         begin=0,
         end=50,
         by_epoch=True,
-        milestones=[50, 100],
+        milestones=[20, 40],
         gamma=0.1)
 ]
 
 optim_wrapper = dict(
-    constructor='TSMOptimWrapperConstructor',
-    paramwise_cfg=dict(fc_lr5=True),
-    optimizer=dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001),
-    clip_grad=dict(max_norm=20, norm_type=2))
+    optimizer=dict(
+        type='SGD',
+        lr=0.005,
+        momentum=0.9,
+        weight_decay=0.0001),
+    clip_grad=dict(max_norm=40, norm_type=2))
 
 # Default setting for scaling LR automatically
 #   - `enable` means enable scaling LR automatically

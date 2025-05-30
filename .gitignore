@@ -149,3 +149,5 @@ mmaction/tools/*
 !projects/stad_tutorial/*.ipynb
 mmaction/.mim
 output
+mmaction/output.txt
+mmaction/output.bin
