@@ -1,6 +1,7 @@
 _base_ = ['../../_base_/default_runtime.py']
 
 # model settings
+# model settings
 num_frames = 8
 model = dict(
     type='Recognizer3D',
@@ -13,6 +14,7 @@ model = dict(
         heads=12,
         t_size=num_frames,
         dw_reduction=1.5,
+        backbone_drop_path_rate=0.,
         temporal_downsample=False,
         no_lmhra=True,
         double_lmhra=True,
@@ -22,12 +24,12 @@ model = dict(
         n_head=12,
         mlp_factor=4.,
         drop_path_rate=0.,
-        mlp_dropout=[0., 0., 0., 0.],
+        mlp_dropout=[0.5, 0.5, 0.5, 0.5],
         clip_pretrained=True,
         pretrained='ViT-B/16'),
     cls_head=dict(
         type='UniFormerHead',
-        dropout_ratio=0.,
+        dropout_ratio=0.5,
         num_classes=2,
         in_channels=768,
         average_clips='prob'),
@@ -39,12 +41,12 @@ model = dict(
 
 # dataset settings
 dataset_type = 'RawframeDataset'
-data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames_60/train_all'
-data_root_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val'
-data_root_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/test_data'
-ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames_60/train_all/110_video_train_annotation_file.txt'
-ann_file_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val/110_video_val_annotation_file.txt'
-ann_file_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/test_data/110_video_test_annotation_file.txt'
+data_root_train = '/home/tl/data/datasets/mmaction2/expand_x2_60/keep_ratio/train'
+data_root_val = '/home/tl/data/datasets/mmaction2/expand_x2_60/keep_ratio/val_test'
+data_root_test = '/home/tl/data/datasets/mmaction2/expand_x2_60/keep_ratio/val_test'
+ann_file_train = '/home/tl/data/datasets/mmaction2/expand_x2_60/keep_ratio/train/110_video_train_annotation_file.txt'
+ann_file_val = '/home/tl/data/datasets/mmaction2/expand_x2_60/keep_ratio/val_test/110_video_train_annotation_file.txt'
+ann_file_test = '/home/tl/data/datasets/mmaction2/expand_x2_60/keep_ratio/val_test/110_video_train_annotation_file.txt'
 filename_tmpl = '{:d}.jpg'
 
 file_client_args = dict(io_backend='disk')
@@ -52,7 +54,7 @@ file_client_args = dict(io_backend='disk')
 train_pipeline = [
     dict(type='UniformSample', clip_len=num_frames, num_clips=1),
     dict(type='RawFrameDecode', **file_client_args),
-    dict(type='Resize', scale=(224, 224), keep_ratio=True),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='Flip', flip_ratio=0.5),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='PackActionInputs')
@@ -60,10 +62,10 @@ train_pipeline = [
 
 val_pipeline = [
     dict(
-        type='UniformSample', clip_len=num_frames, num_clips=1,
+        type='UniformSample', clip_len=num_frames, num_clips=2,
         test_mode=True),
     dict(type='RawFrameDecode'),
-    dict(type='Resize', scale=(224, 224), keep_ratio=True),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='PackActionInputs')
 ]
@@ -73,13 +75,13 @@ test_pipeline = [
         type='UniformSample', clip_len=num_frames, num_clips=4,
         test_mode=True),
     dict(type='RawFrameDecode'),
-    dict(type='Resize', scale=(224, 224), keep_ratio=True),
+    dict(type='Resize', scale=(224, 224), keep_ratio=False),
     dict(type='FormatShape', input_format='NCTHW'),
     dict(type='PackActionInputs')
 ]
 
 train_dataloader = dict(
-    batch_size=8,
+    batch_size=16,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
@@ -92,7 +94,7 @@ train_dataloader = dict(
         pipeline=train_pipeline))
 
 val_dataloader = dict(
-    batch_size=8,
+    batch_size=12,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
@@ -123,7 +125,7 @@ test_dataloader = dict(
 val_evaluator = dict(type='AccMetric')
 test_evaluator = dict(type='AccMetric')
 train_cfg = dict(
-    type='EpochBasedTrainLoop', max_epochs=200, val_begin=1, val_interval=1)
+    type='EpochBasedTrainLoop', max_epochs=55, val_begin=1, val_interval=1)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
@@ -137,7 +139,7 @@ optim_wrapper = dict(
 param_scheduler = [
     dict(
         type='LinearLR',
-        start_factor=0.1,
+        start_factor=0.5,
         by_epoch=True,
         begin=0,
         end=5,
@@ -145,15 +147,15 @@ param_scheduler = [
     dict(
         type='CosineAnnealingLR',
         T_max=50,
-        eta_min_ratio=0.1,
+        eta_min_ratio=0.5,
         by_epoch=True,
         begin=5,
-        end=225,
+        end=100,
         convert_to_iter_based=True)
 ]
 
 default_hooks = dict(
-    checkpoint=dict(interval=3, max_keep_ckpts=5), logger=dict(interval=100))
+    checkpoint=dict(interval=5, max_keep_ckpts=5), logger=dict(interval=50))
 
 # Default setting for scaling LR automatically
 #   - `enable` means enable scaling LR automatically

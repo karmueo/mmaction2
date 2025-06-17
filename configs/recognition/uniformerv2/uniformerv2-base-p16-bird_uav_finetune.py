@@ -4,7 +4,7 @@ load_from = '/home/tl/work/mmaction2/output/uniformerv2/best_epoch_84.pth'
 
 
 # model settings
-num_frames = 16
+num_frames = 32
 model = dict(
     type='Recognizer3D',
     backbone=dict(
@@ -81,7 +81,7 @@ test_pipeline = [
 ]
 
 train_dataloader = dict(
-    batch_size=8,
+    batch_size=12,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
@@ -94,7 +94,7 @@ train_dataloader = dict(
         pipeline=train_pipeline))
 
 val_dataloader = dict(
-    batch_size=8,
+    batch_size=12,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),

@@ -8,10 +8,10 @@ model = dict(backbone=dict(num_segments=32), cls_head=dict(num_segments=32))
 
 # dataset settings
 dataset_type = 'RawframeDataset'
-data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train'
+data_root_train = '/home/tl/data/datasets/mmaction2/110_video_frames_60/train_all'
 data_root_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val'
 data_root_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/test_data'
-ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames/train/110_video_train_annotation_file.txt'
+ann_file_train = '/home/tl/data/datasets/mmaction2/110_video_frames_60/train_all/110_video_train_annotation_file.txt'
 ann_file_val = '/home/tl/data/datasets/mmaction2/110_video_frames/val/110_video_val_annotation_file.txt'
 ann_file_test = '/home/tl/data/datasets/mmaction2/110_video_frames/test/test_data/110_video_test_annotation_file.txt'
 filename_tmpl = '{:d}.jpg'

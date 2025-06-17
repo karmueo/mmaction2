@@ -13,14 +13,19 @@
 			"program": "tools/train.py",
 			"console": "integratedTerminal",
 			"args": [
-				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav_finetune.py", 
-				"--work-dir", "./output/uniformerv2", 
+				// "configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav_finetune.py", 
+				// "--work-dir", "./output/uniformerv2", 
 				// "configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
 				// "--work-dir", "./output/uniformerv2",	
 				// "configs/recognition/tsm/tsm_imagenet-bird_uav_images_finetune.py", 
 				// "--work-dir", "./output/tsm", 
+				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
+				"--work-dir", "./output/uniformerv2/keep_ratio",
 				"--amp"],
-			"justMyCode": false
+			"justMyCode": false,
+			"env": {
+				"CUDA_VISIBLE_DEVICES" : "3",
+			}
 		},
 		{
 			"name": "test",
@@ -31,8 +36,8 @@
 			"args": [
 				// "configs/recognition/tsm/tsm_imagenet-bird_uav_images.py",
 				// "output/tsm/epoch_225.pth"
-				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav_finetune.py",
-				"output/uniformerv2/epoch_50.pth"
+				"configs/recognition/uniformerv2/uniformerv2-base-p16-bird_uav.py",
+				"output/uniformerv2/no_keep_ratio_multigpus/acc_92.pth"
 			],
 			"justMyCode": false
 		},
